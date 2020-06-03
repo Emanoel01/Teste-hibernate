@@ -1,0 +1,52 @@
+package main;
+
+class Cliente{
+    private int id;
+    private String nome;
+    
+    public void setId(int id){
+        this.id = id;
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+    
+    public String getNome(){
+        return this.nome;
+    }
+    
+    
+}
+
+
+
+
+public class Main
+{
+	public static void main(String[] args) {
+		Cliente cliente1 = new Cliente();
+		cliente1.setNome("Emanoel");
+		cliente1.setId(1);
+		
+		Cliente cliente2 = new Cliente();
+		cliente2.setNome("ILTO");
+		cliente2.setId(2);
+		
+		Cliente cliente3 = new Cliente();
+		cliente3.setNome("joana");
+		cliente3.setId(3);
+		
+		ArrayList<Cliente> clientes = new ArrayList();
+		
+		cliente.add(cliente1);
+		cliente.add(cliente2);
+		cliente.add(cliente3);
+		System.out.println(String.valueOf(cliente.indexOf("joana")));
+	}
+}
+

@@ -1,0 +1,72 @@
+package DAO;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
+import javax.persistence.EntityManager;
+
+import conection.ConectionFactory;
+import model.Cliente;
+import model.ListaChamada;
+
+public class ListaChamadaDAO {
+	
+	public EntityManager emCliente = new ConectionFactory().getConection();
+	
+	public List<ListaChamada> saveListaChamada(List<ListaChamada> listListachamada) {
+		
+		try {
+			
+			for(int i=0;i<listListachamada.size();i++) {
+				ListaChamada listaChamada = listListachamada.get(i);
+				
+				emCliente.getTransaction().begin();
+				emCliente.persist(listaChamada);
+				emCliente.getTransaction().commit();
+			}
+
+			
+			
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+			emCliente.getTransaction().rollback();
+		}finally {
+			emCliente.close();
+		}
+		
+		return listListachamada;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<ListaChamada> getDatas(){
+		
+		List<ListaChamada> listaDatas = null;
+		
+		try {
+			listaDatas = emCliente.createNativeQuery("select * from tbl_lista_chamada group by dia").getResultList();
+			
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+			emCliente.getTransaction().rollback();
+		}finally {
+			emCliente.close();
+		}
+		
+		return listaDatas;
+		
+		
+	}
+	
+
+	
+	
+
+
+}

@@ -1,0 +1,100 @@
+package DAO;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
+import javax.persistence.EntityManager;
+
+import conection.ConectionFactory;
+import model.Cliente;
+import model.ListaChamada;
+
+public class ListaChamadaDAO {
+	
+	public EntityManager emCliente = new ConectionFactory().getConection();
+	
+	public List<ListaChamada> saveListaChamada(List<ListaChamada> listListachamada) {
+		
+		try {
+			
+			for(int i=0;i<listListachamada.size();i++) {
+				ListaChamada listaChamada = listListachamada.get(i);
+				
+				emCliente.getTransaction().begin();
+				emCliente.persist(listaChamada);
+				emCliente.getTransaction().commit();
+			}
+
+			
+			
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+			emCliente.getTransaction().rollback();
+		}finally {
+			emCliente.close();
+		}
+		
+		return listListachamada;
+	}
+	
+	
+	@SuppressWarnings( "unchecked")
+	public List<String> getDatas(){
+		
+		List<ListaChamada> listaChamada = null;
+		List<String> listaDatas = new ArrayList<>();
+		
+		try {
+			listaChamada = emCliente.createQuery("from ListaChamada lc group by lc.dia").getResultList();
+			
+			for(ListaChamada chamada : listaChamada) {
+				String dia;
+				String mes;
+				String data;
+				
+				
+				//DIA
+				if(chamada.getDia()<10) {
+					dia = "0"+chamada.getDia();
+				}else {
+					dia = String.valueOf(chamada.getDia());
+				}
+				
+				//MES
+				if(chamada.getMes()<10) {
+					mes = "0"+chamada.getMes();
+				}else {
+					mes = String.valueOf(chamada.getMes());
+				}
+				
+				//ANO
+				data = dia + "/" + mes + "/" + ano;
+				
+				
+				listaDatas.add(data);
+			}
+			
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+			emCliente.getTransaction().rollback();
+		}finally {
+			emCliente.close();
+		}
+		
+		return listaDatas;
+		
+		
+	}
+	
+
+	
+	
+
+
+}

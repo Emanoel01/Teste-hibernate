@@ -1,0 +1,34 @@
+package main;
+
+import java.util.HashMap;
+
+import View.FrmCliente;
+import model.Cliente;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Cliente cliente1 = new Cliente();
+		
+		cliente1.setNome("Emanoel");
+		cliente1.setId(1);
+		
+		Cliente cliente2 = new Cliente();
+		cliente2.setNome("Jao");
+		cliente2.setId(2);
+		
+		Cliente cliente3 = new Cliente();
+		cliente3.setNome("Maria");
+		cliente3.setId(3);
+		
+		HashMap<Integer, Cliente> listaCliente = new HashMap<>();
+		
+		listaCliente.put(cliente1.getId(), cliente1);
+		listaCliente.put(cliente2.getId(), cliente2);
+		listaCliente.put(cliente3.getId(), cliente3);
+		
+	}
+
+}

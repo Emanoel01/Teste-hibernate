@@ -1,0 +1,15 @@
+package main;
+
+import View.FrmCliente;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		FrmCliente cliente = new FrmCliente();
+		cliente.setVisible(true);
+		
+	}
+
+}

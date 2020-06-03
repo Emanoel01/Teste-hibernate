@@ -1,0 +1,13 @@
+package DAO;
+
+import javax.persistence.EntityManager;
+
+import conection.ConectionFactory;
+
+public class ClienteOperacaoDAO {
+
+	public EntityManager emCliente = new ConectionFactory().getConection(); 
+	
+	
+	
+}

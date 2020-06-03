@@ -1,0 +1,55 @@
+package main;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class Cliente{
+    private int id;
+    private String nome;
+    
+    public void setId(int id){
+        this.id = id;
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+    
+    public String getNome(){
+        return this.nome;
+    }
+    
+    
+}
+
+
+
+
+public class Main
+{
+	public static void main(String[] args) {
+		Cliente cliente1 = new Cliente();
+		cliente1.setNome("Emanoel");
+		cliente1.setId(1);
+		
+		Cliente cliente2 = new Cliente();
+		cliente2.setNome("ILTO");
+		cliente2.setId(2);
+		
+		Cliente cliente3 = new Cliente();
+		cliente3.setNome("joana");
+		cliente3.setId(3);
+		
+		List<Cliente> clientes = new ArrayList();
+		
+		clientes.add(cliente1);
+		clientes.add(cliente2);
+		clientes.add(cliente3);
+		System.out.println(String.valueOf(clientes.indexOf("joana")));
+	}
+}
+

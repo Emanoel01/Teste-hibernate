@@ -1,0 +1,22 @@
+package DAO;
+
+import javax.persistence.EntityManager;
+
+import conection.ConectionFactory;
+import model.ClienteOperacao;
+
+public class ClienteOperacaoDAO {
+
+	public EntityManager emCliente = new ConectionFactory().getConection();
+	
+	public Boolean saveClienteOperacao(ClienteOperacao clienteOperacao) {
+		
+		Boolean salvar = false;
+		
+	}
+	
+	
+	
+	
+	
+}

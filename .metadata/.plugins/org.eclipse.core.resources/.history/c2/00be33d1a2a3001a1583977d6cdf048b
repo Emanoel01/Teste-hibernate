@@ -1,0 +1,21 @@
+package model;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.*;
+
+@Entity
+@Table(name="tbl_cliente_operacao")
+public class ClienteOperacao {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@JoinColumn(name="id_cliente")
+	private Cliente idCliente;
+	
+	@JoinColumn(name="id_operacao")
+	private Operacao idOperacao;
+
+}
