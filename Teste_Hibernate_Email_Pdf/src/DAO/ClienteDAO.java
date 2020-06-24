@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Query;
+
 import conection.ConectionFactory;
 import model.Cliente;
 
@@ -82,5 +84,35 @@ public class ClienteDAO {
 		
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	public List<Cliente> getClienteByName(String name){
+		
+		List<Cliente> clientes = null;
+		
+		try {
+			//clientes = emCliente.createQuery("from Cliente c Where c.nome like %" + name  +"%").getResultList();
+			
+			String hql = "from Cliente c Where c.nome like '"+ name + "%'";
+			
+			clientes = emCliente.createQuery(hql).getResultList();
+			
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			emCliente.getTransaction().rollback();
+			
+			
+		}finally {
+			emCliente.close();
+		}
+		
+		
+		return clientes;
+		
+	}
+	
 
 }
+
+

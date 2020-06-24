@@ -1,7 +1,0 @@
-package model;
-
-@Entity
-@Table(name="tbl_lista_chamada")
-public class ListaChamada {
-
-}

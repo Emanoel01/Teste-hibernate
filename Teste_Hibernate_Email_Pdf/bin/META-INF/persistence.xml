@@ -3,7 +3,7 @@
   <!-- Unidade de persistencia -->
   <persistence-unit name="projetoHibernate">
     <!-- Implementação do JPA -->
-    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <!-- <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider> -->
     <!-- Lista de entidades -->
     <class>src/model/Cliente</class>
     <class>src/model/Operacao</class>

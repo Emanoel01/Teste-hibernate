@@ -12,9 +12,7 @@ public class Main {
 		
 		FrmCliente cliente = new FrmCliente();
 		cliente.setVisible(true);
-		
-		
-		
+			
 	}
 
 }

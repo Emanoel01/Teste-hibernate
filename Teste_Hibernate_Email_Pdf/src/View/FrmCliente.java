@@ -11,6 +11,10 @@ import DAO.ClienteDAO;
 import DAO.ClienteOperacaoDAO;
 import DAO.ListaChamadaDAO;
 import DAO.OperacaoDAO;
+import Email.EnvioExtrato;
+import controller.ClienteExtratoControler;
+import controller.ExtratoController;
+import extrato.GeradorExtrato;
 import model.Cliente;
 import model.ClienteOperacao;
 import model.ListaChamada;
@@ -22,6 +26,8 @@ import javax.swing.JTextField;
 import java.awt.CardLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -65,9 +71,12 @@ public class FrmCliente extends JFrame {
 	private JTextField txtQntdPacotes;
 	private JTextField txtDiaria;
 	private List<String> listDatas;
-	private int refresh= 0;
+	int contIdCliente = 0;
 	
 	public ListaChamadaDAO listaDao = new ListaChamadaDAO();
+	private JTable tblOperacaoExtrato;
+	private JTable tblClienteExtrato;
+	private JTextField txtNomeExtrato;
 	
 
 	
@@ -356,7 +365,6 @@ public class FrmCliente extends JFrame {
 					}
 					tabbedPane.setSelectedIndex(2);
 				}
-				refresh++;
 			}
 		});
 		btnSalvarLista.setBounds(635, 209, 89, 23);
@@ -606,7 +614,7 @@ public class FrmCliente extends JFrame {
 				operacao.setValorDia(Double.valueOf(txtDiaria.getText()));
 				
 				operacaoSalva = operacaoDAO.saveOperacao(operacao);
-				cliente = clienteDAO.getClienteById(tblListChamadaOperacao.getSelectedRow());
+				cliente = clienteDAO.getClienteById((int) modelTblList.getValueAt(tblListChamadaOperacao.getSelectedRow(), 0));
 				
 				clienteOperacao.setIdCliente(cliente);
 				clienteOperacao.setIdOperacao(operacaoSalva);
@@ -623,14 +631,195 @@ public class FrmCliente extends JFrame {
 		});
 		
 		
-		
-		
-		
-		
-		
 		JPanel painelExtrato= new JPanel();
 		tabbedPane.addTab("Extratos", null, painelExtrato, null);
+		painelExtrato.setLayout(null);
 		
+		JScrollPane spListaOperacao = new JScrollPane();
+		spListaOperacao.setBounds(10, 226, 533, 185);
+		painelExtrato.add(spListaOperacao);
+		
+		tblOperacaoExtrato = new JTable();
+		spListaOperacao.setViewportView(tblOperacaoExtrato);
+		tblOperacaoExtrato.setDefaultEditor(Object.class, null);
+		
+		JScrollPane spClienteExtrato = new JScrollPane();
+		spClienteExtrato.setBounds(10, 55, 533, 116);
+		painelExtrato.add(spClienteExtrato);
+		
+		tblClienteExtrato = new JTable();
+		spClienteExtrato.setViewportView(tblClienteExtrato);
+		tblClienteExtrato.setDefaultEditor(Object.class, null);
+		
+		JLabel lblNomeExtrato = new JLabel("Nome:\r\n");
+		lblNomeExtrato.setBounds(10, 11, 47, 33);
+		painelExtrato.add(lblNomeExtrato);
+		
+		txtNomeExtrato = new JTextField();
+		txtNomeExtrato.setBounds(67, 11, 147, 33);
+		painelExtrato.add(txtNomeExtrato);
+		txtNomeExtrato.setColumns(10);
+		
+		JComboBox cbDataExtrato = new JComboBox();
+		cbDataExtrato.setBounds(20, 182, 95, 33);
+		painelExtrato.add(cbDataExtrato);
+		
+		
+		//Models tabelas e comboBox
+		DefaultTableModel modelTblClienteExtrato = new DefaultTableModel() {
+			public java.lang.Class<?> getColumnClass(int columnIndex) {
+				switch(columnIndex) {
+					case 0:
+						return Integer.class;
+					case 1:
+						return String.class;
+					case 2:
+						return String.class;
+					default:
+						return String.class;
+				}
+			}
+		};
+		
+		modelTblClienteExtrato.addColumn("id");
+		modelTblClienteExtrato.addColumn("Nome");
+		modelTblClienteExtrato.addColumn("Email");
+		
+		ClienteExtratoControler controllerCliente = new ClienteExtratoControler();
+		controllerCliente.controllerCliente(txtNomeExtrato.getText(), tblClienteExtrato, modelTblClienteExtrato);
+		
+		
+			txtNomeExtrato.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("pressionou");
+				controllerCliente.controllerCliente(txtNomeExtrato.getText(), tblClienteExtrato, modelTblClienteExtrato);
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
+		
+		
+		DefaultTableModel modelTblExtratos = new DefaultTableModel() {
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				switch (columnIndex) {
+				case 0:
+					return Integer.class;
+				case 1:
+					return String.class;
+				case 2:
+					return Integer.class;
+				case 3:
+					return Double.class;
+				case 4:
+					return String.class;
+				default:
+					return String.class;
+					
+				}
+				
+			}
+		};
+		
+		modelTblExtratos.addColumn("Id");
+		modelTblExtratos.addColumn("Nome");
+		modelTblExtratos.addColumn("Email");
+		modelTblExtratos.addColumn("Qntd P");
+		modelTblExtratos.addColumn("Diaria");
+		modelTblExtratos.addColumn("Data");
+		
+		
+		
+		
+		DefaultComboBoxModel<String> modelCbDatasExtrato = new DefaultComboBoxModel<>();
+		modelCbDatasExtrato.addElement("Datas");
+		
+		List<String> datasExtrato = null;
+		
+		ListaChamadaDAO daoDatasExtrato = new ListaChamadaDAO(); 
+		
+		datasExtrato = daoDatasExtrato.getDatas();
+		
+		for(String data : datasExtrato) {
+			modelCbDatasExtrato.addElement(data);
+		}
+		
+		cbDataExtrato.setModel(modelCbDatasExtrato);
+		
+		
+		
+		ExtratoController extratoController = new ExtratoController();
+		
+		extratoController.getExtratoController(0, modelTblExtratos,tblOperacaoExtrato , cbDataExtrato.getSelectedItem().toString());
+		
+		JButton btnEnviarExtrato = new JButton("Enviar por email");
+		btnEnviarExtrato.setBounds(553, 292, 147, 23);
+		painelExtrato.add(btnEnviarExtrato);
+		
+		
+		
+		cbDataExtrato.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				extratoController.getExtratoController(contIdCliente, modelTblExtratos,tblOperacaoExtrato , cbDataExtrato.getSelectedItem().toString());
+			}
+		});
+		
+		
+		//Colocando os valores nas tabelas e no comboBox
+		
+		
+		tblClienteExtrato.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				contIdCliente = (int) modelTblClienteExtrato.getValueAt(
+					tblClienteExtrato.getSelectedRow(),
+						0);
+				if(e.getClickCount()==2) {
+					extratoController.getExtratoController(contIdCliente, modelTblExtratos,tblOperacaoExtrato , cbDataExtrato.getSelectedItem().toString());
+					
+				}
+			
+				
+			
+				
+			}
+		});
+		
+		btnEnviarExtrato.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GeradorExtrato geradorExtrato = new GeradorExtrato();
+				String caminhoExtrato = geradorExtrato.generatePFDExtrato(modelTblExtratos);
+			
+				EnvioExtrato envioExtrato = new EnvioExtrato();
+				String emailCliente = (String) modelTblExtratos.getValueAt(0, 2);
+				
+				if(envioExtrato.sendExtratoByEmail(emailCliente, caminhoExtrato)) {
+					JOptionPane jOptionPane = new JOptionPane();
+					jOptionPane.showMessageDialog(null, "Enviado enviado com sucesso");
+				}
+				
+				
+				
+			}
+		});
 		
 		
 	}
